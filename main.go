@@ -82,6 +82,7 @@ func handleConnection(conn *quic.Conn, baseDir string) {
 			}
 		}
 	} else if strings.HasPrefix(cmdLine, "get ") {
+
 		filename := strings.TrimPrefix(cmdLine, "get ")
 		fullpath := filepath.Join(baseDir, filename)
 
@@ -92,6 +93,8 @@ func handleConnection(conn *quic.Conn, baseDir string) {
 		}
 		defer file.Close()
 
+		fileInfo, _ := file.Stat()
+		fmt.Fprintln(stream, fileInfo.Size()) // ✅ 傳送檔案大小（第一行）
 		io.Copy(stream, file)
 	}
 }
